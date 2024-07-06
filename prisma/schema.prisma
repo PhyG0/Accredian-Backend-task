@@ -1,0 +1,34 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id              Int      @id @default(autoincrement())
+  username        String   @unique
+  firstName       String
+  lastName        String
+  password        String
+  referralRewards Reward[]
+  referralCode     String   @unique
+  isReferralCodeUsed Boolean @default(false)
+}
+
+model Reward {
+  id          Int      @id @default(autoincrement())
+  type        RewardType
+  amount      Float
+  description String?
+  user        User     @relation(fields: [userName], references: [username])
+  userName    String
+  createdAt   DateTime @default(now())
+}
+
+enum RewardType {
+  DISCOUNT
+  PRIZE
+}
